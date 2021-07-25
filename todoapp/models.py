@@ -7,6 +7,9 @@ class Project(models.Model):
     href = models.URLField(max_length=128, blank=True)
     users = models.ManyToManyField(User)
 
+    def __str__(self):
+        return self.name
+
 
 class ToDo(models.Model):
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
@@ -14,11 +17,8 @@ class ToDo(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.CASCADE)
-    is_active = models.BooleanField()
+    is_active = models.BooleanField(default=True)
+    is_deleted = models.BooleanField(default=False)
 
-
-
-
-
-
-# Create your models here.
+    def __str__(self):
+        return f'todo{self.id} {self.project.name} {self.text[:20]}'
