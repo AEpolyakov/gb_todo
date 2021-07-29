@@ -7,7 +7,6 @@ const MenuPage = () => {
     <a href="#news">News</a>
     <a href="#contact">Contact</a>
   </div>
-
   );
 }
 

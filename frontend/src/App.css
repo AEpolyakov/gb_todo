@@ -39,7 +39,7 @@
 }
 
 .content{
-
+  margin: 70px 0 0 0;
 }
 
 .menu{
@@ -88,26 +88,34 @@
   font-size: 17px;
 }
 
-#users {
-  margin: 70px 0 0 0;
+#table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
 }
 
-#users td, #users th {
+#table td, #table th {
   border: 1px solid #ddd;
   padding: 8px;
 }
 
-#users tr:nth-child(even){background-color: #f2f2f2;}
+#table tr:nth-child(even){background-color: #f2f2f2;}
 
-#users tr:hover {background-color: #ddd;}
+#table tr:hover {background-color: #ddd;}
 
-#users th {
+#table th {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: left;
   background-color: #04AA6D;
   color: white;
+}
+
+#table a{
+    text-decoration: none;
+    color: black;
+}
+
+.project{
+    padding: 20px;
 }

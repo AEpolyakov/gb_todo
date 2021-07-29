@@ -1,6 +1,6 @@
 import React from 'react'
 
-const AuthorItem = ({user}) => {
+const UserItem = ({user}) => {
     return(
         <tr>
             <td>{user.first_name}</td>
@@ -10,16 +10,15 @@ const AuthorItem = ({user}) => {
     )
 }
 
-const AuthorList = ({users}) => {
-    console.log('from list: users = ',users)
+const UserList = ({users}) => {
     return(
-        <table id="users">
+        <table id="table">
             <th>first name</th>
             <th>last name</th>
             <th>Pass</th>
-            {users.map((user)=> <AuthorItem user={user} />)}
+            {users.map((user)=> <UserItem user={user} />)}
         </table>
     )
 }
 
-export default AuthorList
+export default UserList

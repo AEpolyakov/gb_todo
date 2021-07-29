@@ -19,7 +19,7 @@ class ProjectSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class ToDoSerializer(HyperlinkedModelSerializer):
+class ToDoSerializer(ModelSerializer):
     class Meta:
         model = ToDo
         fields = ['id', 'project', 'text', 'created_at', 'updated_at', 'created_by', 'is_active', 'is_deleted']
