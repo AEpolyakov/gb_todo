@@ -2,10 +2,11 @@ import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 
 const ProjectItem = ({project}) => {
+
     return(
         <tr>
             <td><Link to={`${project.id}`}>{project.name}</Link></td>
-            <td>{project.users.map((user) => user.first_name)}</td>
+            <td>{project.users.map((user) => `${user.first_name}  ${user.last_name}; `)}</td>
         </tr>
     )
 }
@@ -27,17 +28,17 @@ const ProjectSingle = ({todos, projects, users}) => {
     let current_project_todos = todos.filter((todo) => todo.project == project.id)
     return(
         <div>
-            <Link to='/projects/'>Back</Link>
+            <Link to='/projects/'>Back to projects</Link>
             <div class='project'>
                 <h4>Project:  {project.name}</h4>
                 <p>participants:</p>
                 <ul>
-                    {project.users.map((user) => <li>{user.first_name}  {user.last_name}</li>)}
+                    {project.users.map((user) => <li>{`${user.first_name} ${user.last_name}`}</li>)}
                 </ul>
                 <hr />
                 <p>todo list:</p>
                 <ul>
-                    {current_project_todos.map((todo) => <li>{todo.text}</li>)}
+                    {current_project_todos.map((todo) => <li>{`${todo.id} ${todo.text}`}</li>)}
                 </ul>
             </div>
         </div>

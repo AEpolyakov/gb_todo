@@ -7,7 +7,7 @@ const TodoItem = ({todo, project, user}) => {
             <td>{todo.id}</td>
             <td>{todo.text}</td>
             <td>{project.name}</td>
-            <td>{user.first_name}</td>
+            <td>{`${user.first_name} ${user.last_name}`}</td>
         </tr>
     )
 }
