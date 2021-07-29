@@ -80,8 +80,12 @@ class App extends React.Component {
                 <Switch>
                     <Route exact path='/users/' component={() => <UserList users={this.state.users} />} />
                     <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects} />} />
-                    <Route exact path='/todos/' component={() => <TodoList todos={this.state.todos} />} />
-                    <Route path='/projects/:id' component={() => <ProjectSingle projects={this.state.projects} />} />
+                    <Route exact path='/todos/'>
+                        <TodoList todos={this.state.todos} projects={this.state.projects} users={this.state.users}/>
+                    </Route>
+                    <Route path='/projects/:id'>
+                        <ProjectSingle todos={this.state.todos} projects={this.state.projects} users={this.state.users} />
+                    </Route>
                     <Route exact path='/'>
                         <Redirect to='/users'  />
                     </Route>

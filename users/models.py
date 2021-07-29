@@ -33,3 +33,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def email_user(self, subject, message, from_email=None, **kwargs):
         send_mail(subject, message, from_email, [self.email], **kwargs)
+
+    def __str__(self):
+        return f'{self.first_name}  {self.last_name}'

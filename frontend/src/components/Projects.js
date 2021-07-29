@@ -20,10 +20,11 @@ const ProjectList = ({projects}) => {
     )
 }
 
-const ProjectSingle = ({projects}) => {
+const ProjectSingle = ({todos, projects, users}) => {
     let {id} = useParams()
     let filtered_projects = projects.filter((project) => project.id == parseInt(id))
     let project = filtered_projects[0]
+    let current_project_todos = todos.filter((todo) => todo.project == project.id)
     return(
         <div>
             <Link to='/projects/'>Back</Link>
@@ -32,6 +33,11 @@ const ProjectSingle = ({projects}) => {
                 <p>participants:</p>
                 <ul>
                     {project.users.map((user) => <li>{user.first_name}  {user.last_name}</li>)}
+                </ul>
+                <hr />
+                <p>todo list:</p>
+                <ul>
+                    {current_project_todos.map((todo) => <li>{todo.text}</li>)}
                 </ul>
             </div>
         </div>
