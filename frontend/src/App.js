@@ -8,6 +8,8 @@ import MenuPage from './components/menu.js'
 import {ProjectList, ProjectSingle} from './components/Projects.js'
 import {TodoList} from './components/Todos.js'
 import {HashRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
+import LoginForm from './components/LoginForm.js'
+import Cookies from 'universal-cookie'
 
 
 const NotFound404 = ({ location }) => {
@@ -26,12 +28,30 @@ class App extends React.Component {
             'projects': [],
             'project': [],
             'todos': [],
+            'token': ''
         }
     }
 
-    componentDidMount(){
+    get_token_from_storage(){
+        const cookie = new Cookies()
 
-        axios.get('http://127.0.0.1:8000/api/users/')
+
+    }
+
+    get_headers(){
+        let headers = {
+            'Content-Type': 'application/json'
+        }
+        const cookie = new Cookies()
+        headers['Authorization'] = 'token ' + cookie.get('token')
+        return headers
+    }
+
+    get_data(){
+        const headers = this.get_headers()
+        console.log('headers: ', headers)
+
+        axios.get('http://127.0.0.1:8000/api/users/', {headers})
         .then(
             response => {
                 const users = response.data.results
@@ -43,7 +63,7 @@ class App extends React.Component {
             error => console.log(error)
         )
 
-        axios.get('http://127.0.0.1:8000/api/projects/')
+        axios.get('http://127.0.0.1:8000/api/projects/', {headers})
         .then(
             response => {
                 const projects = response.data.results
@@ -55,7 +75,7 @@ class App extends React.Component {
             error => console.log(error)
         )
 
-        axios.get('http://127.0.0.1:8000/api/todo/')
+        axios.get('http://127.0.0.1:8000/api/todo/', {headers})
         .then(
             response => {
                 const todos = response.data.results
@@ -68,6 +88,27 @@ class App extends React.Component {
         )
     }
 
+    componentDidMount(){
+        this.get_data()
+    }
+
+    get_token(login, password){
+        axios.post('http://127.0.0.1:8000/api-token-auth/', {"username": login, "password": password})
+        .then(
+            response => {
+                const token = response.data.token
+                const cookie = new Cookies()
+                cookie.set('token', token)
+                this.setState('token', token)
+                this.get_data()
+
+            }
+        ).catch(
+            error => console.log(error)
+        )
+    }
+
+
     render(){
         return (
         <div class="content">
@@ -76,8 +117,12 @@ class App extends React.Component {
                     <Link to="/users/" class="active">Users</Link>
                     <Link to="/projects/">Projects</Link>
                     <Link to="/todos/">Todo</Link>
+                    <Link to="/login/">Login</Link>
                 </nav>
                 <Switch>
+                    <Route exact path='/login/'>
+                        <LoginForm get_token={(login, password) => this.get_token(login, password)} />
+                    </Route>
                     <Route exact path='/users/' component={() => <UserList users={this.state.users} />} />
                     <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects} />} />
                     <Route exact path='/todos/'>
