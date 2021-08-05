@@ -5,7 +5,7 @@ const ProjectItem = ({project}) => {
     return(
         <tr>
             <td><Link to={`${project.id}`}>{project.name}</Link></td>
-            <td>{project.users.map((user) => user.first_name)}</td>
+            <td>{project.users.map((user) => `${user.first_name} ${user.last_name}; `)}</td>
         </tr>
     )
 }

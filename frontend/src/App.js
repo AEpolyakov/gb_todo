@@ -11,7 +11,6 @@ import {HashRouter, Route, Link, Switch, Redirect} from 'react-router-dom'
 import LoginForm from './components/LoginForm.js'
 import Cookies from 'universal-cookie'
 
-
 const NotFound404 = ({ location }) => {
   return (
     <div id='table'>
@@ -28,14 +27,19 @@ class App extends React.Component {
             'projects': [],
             'project': [],
             'todos': [],
-            'token': ''
+            'token': '',
+            'logined_user': ''
         }
+    }
+
+    is_auth(){
+        return !!this.state.token
     }
 
     get_token_from_storage(){
         const cookie = new Cookies()
-
-
+        const token = cookie.get('token')
+        this.setState({'token': token}, this.get_data)
     }
 
     get_headers(){
@@ -49,7 +53,6 @@ class App extends React.Component {
 
     get_data(){
         const headers = this.get_headers()
-        console.log('headers: ', headers)
 
         axios.get('http://127.0.0.1:8000/api/users/', {headers})
         .then(
@@ -60,7 +63,10 @@ class App extends React.Component {
                 })
             }
         ).catch(
-            error => console.log(error)
+            error => {
+                this.setState({'users': []})
+                console.log(error)
+            }
         )
 
         axios.get('http://127.0.0.1:8000/api/projects/', {headers})
@@ -72,7 +78,10 @@ class App extends React.Component {
                 })
             }
         ).catch(
-            error => console.log(error)
+            error => {
+                this.setState({'projects': []})
+                console.log(error)
+            }
         )
 
         axios.get('http://127.0.0.1:8000/api/todo/', {headers})
@@ -84,12 +93,11 @@ class App extends React.Component {
                 })
             }
         ).catch(
-            error => console.log(error)
+            error => {
+                this.setState({'todo': []})
+                console.log(error)
+            }
         )
-    }
-
-    componentDidMount(){
-        this.get_data()
     }
 
     get_token(login, password){
@@ -99,15 +107,26 @@ class App extends React.Component {
                 const token = response.data.token
                 const cookie = new Cookies()
                 cookie.set('token', token)
-                this.setState('token', token)
-                this.get_data()
-
+                this.setState({'token': token, 'logined_user': login}, this.get_data)
+                return <Redirect to='/users'  />
             }
         ).catch(
-            error => console.log(error)
+            error => {
+                this.setState({'logined_user': ''}, this.get_data)
+                console.log(error)
+            }
         )
     }
 
+    logout(){
+        const cookie = new Cookies()
+        cookie.set('token', '')
+        this.setState({'token': ''}, this.get_data)
+    }
+
+    componentDidMount(){
+        this.get_token_from_storage()
+    }
 
     render(){
         return (
@@ -117,12 +136,15 @@ class App extends React.Component {
                     <Link to="/users/" class="active">Users</Link>
                     <Link to="/projects/">Projects</Link>
                     <Link to="/todos/">Todo</Link>
-                    <Link to="/login/">Login</Link>
+                    {this.is_auth() ?
+                        <div>
+                            <Link class="align-right" onClick={() => this.logout()}>logout</Link>
+                            <a class="align-right">Hello, {this.state.logined_user}</a>
+                        </div>:
+                        <Link class="align-right" to="/login/">Login</Link>
+                    }
                 </nav>
                 <Switch>
-                    <Route exact path='/login/'>
-                        <LoginForm get_token={(login, password) => this.get_token(login, password)} />
-                    </Route>
                     <Route exact path='/users/' component={() => <UserList users={this.state.users} />} />
                     <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects} />} />
                     <Route exact path='/todos/'>
@@ -130,6 +152,9 @@ class App extends React.Component {
                     </Route>
                     <Route path='/projects/:id'>
                         <ProjectSingle todos={this.state.todos} projects={this.state.projects} users={this.state.users} />
+                    </Route>
+                    <Route exact path='/login/'>
+                        <LoginForm get_token={(login, password) => this.get_token(login, password)} />
                     </Route>
                     <Route exact path='/'>
                         <Redirect to='/users'  />
