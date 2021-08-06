@@ -28,8 +28,9 @@ class App extends React.Component {
             'project': [],
             'todos': [],
             'token': '',
-            'logined_user': ''
+            'login': ''
         }
+        this.get_token_from_storage()
     }
 
     is_auth(){
@@ -39,7 +40,8 @@ class App extends React.Component {
     get_token_from_storage(){
         const cookie = new Cookies()
         const token = cookie.get('token')
-        this.setState({'token': token}, this.get_data)
+        const login = cookie.get('login')
+        this.setState({'token': token, 'login': login}, this.get_data)
     }
 
     get_headers(){
@@ -107,12 +109,19 @@ class App extends React.Component {
                 const token = response.data.token
                 const cookie = new Cookies()
                 cookie.set('token', token)
-                this.setState({'token': token, 'logined_user': login}, this.get_data)
-                return <Redirect to='/users'  />
+                cookie.set('login', login)
+                this.setState({'token': token, 'login': login}, this.get_data)
+                if (login === "ae.polyakov@mail.ru") {
+                    console.log('redirect to users')
+                    return <Redirect to="/users" />;
+                } else {
+                    console.log('redirect to projects')
+                    return <Redirect to="/projects" />
+                }
             }
         ).catch(
             error => {
-                this.setState({'logined_user': ''}, this.get_data)
+                this.setState({'login': '', 'token': ''}, this.get_data)
                 console.log(error)
             }
         )
@@ -139,7 +148,7 @@ class App extends React.Component {
                     {this.is_auth() ?
                         <div>
                             <Link class="align-right" onClick={() => this.logout()}>logout</Link>
-                            <a class="align-right">Hello, {this.state.logined_user}</a>
+                            <a class="align-right">Hello, {this.state.login}</a>
                         </div>:
                         <Link class="align-right" to="/login/">Login</Link>
                     }
@@ -157,7 +166,10 @@ class App extends React.Component {
                         <LoginForm get_token={(login, password) => this.get_token(login, password)} />
                     </Route>
                     <Route exact path='/'>
-                        <Redirect to='/users'  />
+                        {this.is_auth() ?
+                            <Redirect to='/users'  />:
+                            <Redirect to='/login'  />
+                        }
                     </Route>
                     <Route component={NotFound404} />
                 </Switch>
