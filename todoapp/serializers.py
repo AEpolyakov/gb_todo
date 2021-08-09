@@ -12,7 +12,7 @@ class UserMiniSerializer(ModelSerializer):
 
 
 class ProjectSerializer(ModelSerializer):
-    users = UserMiniSerializer(many=True)
+    # users = UserMiniSerializer(many=True)
 
     class Meta:
         model = Project
