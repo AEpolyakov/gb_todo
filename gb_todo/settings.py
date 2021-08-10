@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django_filters',
     'rest_framework.authtoken',
     'mixer',
-
+    'drf_yasg',
 ]
 
 REST_FRAMEWORK = {
@@ -61,6 +61,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
+    'DEFAULT_VERSIONING_CLASS': 'rest_framework.versioning.AcceptHeaderVersioning',
 }
 
 AUTH_USER_MODEL = 'users.User'
