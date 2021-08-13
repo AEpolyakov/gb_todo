@@ -38,5 +38,10 @@ class Query(graphene.ObjectType):
     def resolve_all_users(root, info):
         return User.objects.all()
 
+    project_by_name = graphene.List(ProjectType, name=graphene.String(required=True))
+
+    def resolve_project_by_name(root, info, name):
+        return Project.objects.filter(name=name)
+
 
 schema = graphene.Schema(query=Query)
