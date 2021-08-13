@@ -47,7 +47,12 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'mixer',
     'drf_yasg',
+    'graphene_django',
 ]
+
+GRAPHENE = {
+    "SCHEMA": "gb_todo.schema.schema",
+}
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
