@@ -7,7 +7,7 @@ from users.models import User
 class UserType(DjangoObjectType):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', ]
+        fields = ['first_name', 'last_name', 'email']
 
 
 class TodoType(DjangoObjectType):
@@ -43,5 +43,35 @@ class Query(graphene.ObjectType):
     def resolve_project_by_name(root, info, name):
         return Project.objects.filter(name=name)
 
+    user_by_email = graphene.List(UserType, email=graphene.String(required=True))
 
-schema = graphene.Schema(query=Query)
+    def resolve_user_by_email(root, info, email):
+        return User.objects.filter(email=email)
+
+    todo_by_user_email = graphene.List(TodoType, email=graphene.String(required=True))
+
+    def resolve_todo_by_user_email(root, info, email):
+        user = User.objects.get(email=email)
+        return ToDo.objects.filter(created_by=user)
+
+
+class TodoMutation(graphene.Mutation):
+    class Arguments:
+        text = graphene.String(required=True)
+        id = graphene.ID(required=True)
+
+    todo = graphene.Field(TodoType)
+
+    @classmethod
+    def mutate(cls, root, info, text, id):
+        todo = ToDo.objects.get(pk=id)
+        todo.text = text
+        todo.save()
+        return TodoMutation(todo=todo)
+
+
+class Mutation(graphene.ObjectType):
+    update_todo_text = TodoMutation.Field()
+
+
+schema = graphene.Schema(query=Query, mutation=Mutation)
