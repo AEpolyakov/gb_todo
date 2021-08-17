@@ -16,6 +16,10 @@ const TodoItem = ({todo, project, user}) => {
 }
 
 const TodoList = ({todos, projects, users}) => {
+    {console.log("todos:", todos)}
+    {console.log("projects:", projects)}
+    {console.log("users:", users)}
+
     return(
         <table id="table">
             <th>id</th>

@@ -61,8 +61,9 @@ class App extends React.Component {
             response => {
                 const users = response.data.results
                 this.setState({
-                    'users': users
+                    'users': users,
                 })
+                console.log(this.state.users)
             }
         ).catch(
             error => {
@@ -78,6 +79,7 @@ class App extends React.Component {
                 this.setState({
                     'projects': projects
                 })
+                console.log(this.state.projects)
             }
         ).catch(
             error => {
@@ -93,6 +95,7 @@ class App extends React.Component {
                 this.setState({
                     'todos': todos
                 })
+                console.log(this.state.todos)
             }
         ).catch(
             error => {
@@ -111,13 +114,8 @@ class App extends React.Component {
                 cookie.set('token', token)
                 cookie.set('login', login)
                 this.setState({'token': token, 'login': login}, this.get_data)
-                if (login === "ae.polyakov@mail.ru") {
-                    console.log('redirect to users')
-                    return <Redirect to="/users" />;
-                } else {
-                    console.log('redirect to projects')
-                    return <Redirect to="/projects" />
-                }
+                console.log(`token = ${this.state.token}`)
+                console.log(`login = ${this.state.login}`)
             }
         ).catch(
             error => {
@@ -155,7 +153,7 @@ class App extends React.Component {
                 </nav>
                 <Switch>
                     <Route exact path='/users/' component={() => <UserList users={this.state.users} />} />
-                    <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects} />} />
+                    <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects} users={this.state.users} />} />
                     <Route exact path='/todos/'>
                         <TodoList todos={this.state.todos} projects={this.state.projects} users={this.state.users}/>
                     </Route>

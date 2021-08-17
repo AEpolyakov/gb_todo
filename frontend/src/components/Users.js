@@ -5,7 +5,7 @@ const UserItem = ({user}) => {
         <tr>
             <td>{user.first_name}</td>
             <td>{user.last_name}</td>
-            <td>{user.password.substring(0, 16)}</td>
+            <td>{user.email}</td>
         </tr>
     )
 }
@@ -15,7 +15,7 @@ const UserList = ({users}) => {
         <table id="table">
             <th>first name</th>
             <th>last name</th>
-            <th>Pass</th>
+            <th>Email</th>
             {users.map((user)=> <UserItem user={user} />)}
         </table>
     )
