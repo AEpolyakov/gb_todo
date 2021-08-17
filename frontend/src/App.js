@@ -63,7 +63,6 @@ class App extends React.Component {
                 this.setState({
                     'users': users,
                 })
-                console.log(this.state.users)
             }
         ).catch(
             error => {
@@ -79,7 +78,6 @@ class App extends React.Component {
                 this.setState({
                     'projects': projects
                 })
-                console.log(this.state.projects)
             }
         ).catch(
             error => {
@@ -95,7 +93,6 @@ class App extends React.Component {
                 this.setState({
                     'todos': todos
                 })
-                console.log(this.state.todos)
             }
         ).catch(
             error => {
@@ -114,8 +111,6 @@ class App extends React.Component {
                 cookie.set('token', token)
                 cookie.set('login', login)
                 this.setState({'token': token, 'login': login}, this.get_data)
-                console.log(`token = ${this.state.token}`)
-                console.log(`login = ${this.state.login}`)
             }
         ).catch(
             error => {
@@ -133,6 +128,24 @@ class App extends React.Component {
 
     componentDidMount(){
         this.get_token_from_storage()
+        console.log('did mount', this.state)
+    }
+
+    deleteTodo(id){
+        const headers = this.get_headers()
+        axios.delete(`http://127.0.0.1:8000/api/todo/${id}`, {headers})
+        .then(response => this.get_data())
+        .catch(error => console.log(error))
+    }
+
+    deleteProject(id){
+        console.log('delete prj', id)
+
+        const headers = this.get_headers()
+        console.log('headers', headers)
+        axios.delete(`http://127.0.0.1:8000/api/projects/${id}`, {headers})
+        .then(response => this.get_data())
+        .catch(error => console.log(error))
     }
 
     render(){
@@ -153,9 +166,20 @@ class App extends React.Component {
                 </nav>
                 <Switch>
                     <Route exact path='/users/' component={() => <UserList users={this.state.users} />} />
-                    <Route exact path='/projects/' component={() => <ProjectList projects={this.state.projects} users={this.state.users} />} />
+                    <Route exact path='/projects/'>
+                        <ProjectList
+                            projects={this.state.projects}
+                            users={this.state.users}
+                            deleteProject={(id) => this.deleteProject(id)}
+                        />
+                    </Route>
                     <Route exact path='/todos/'>
-                        <TodoList todos={this.state.todos} projects={this.state.projects} users={this.state.users}/>
+                        <TodoList
+                            todos={this.state.todos}
+                            projects={this.state.projects}
+                            users={this.state.users}
+                            deleteTodo={(id) => this.deleteTodo(id)}
+                        />
                     </Route>
                     <Route path='/projects/:id'>
                         <ProjectSingle todos={this.state.todos} projects={this.state.projects} users={this.state.users} />
