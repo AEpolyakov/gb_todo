@@ -1,55 +1,48 @@
 import React from 'react'
 
-class ProjectForm extends React.Component{
+class TodoForm extends React.Component{
     constructor(props){
         super(props)
-        this.state = {name: '', users: []}
+        this.state = {text: '', project: '', created_by: ''}
     }
 
     handleChange(event){
+        console.log('change', event.target.name, event.target.value, this.state)
         this.setState({
             [event.target.name]: event.target.value
         })
     }
 
-    handleUserChange(event) {
-        if (!event.target.selectedOptions) {
-            this.setState({
-                'users' : []
-            })
-            return;
-        }
-        let users = []
-        for(let i=0; i < event.target.selectedOptions.length; i++) {
-            const val = event.target.selectedOptions.item(i).value
-            users.push(val)
-        }
-        this.setState({
-            'users' : users
-        })
-    }
-
     handleSubmit(event){
-        this.props.createProject(this.state.name, this.state.users)
+        this.props.createTodo(this.state.text, this.state.project, this.state.created_by)
         event.preventDefault()
     }
 
     render(){
         return (
             <form onSubmit={(event) => this.handleSubmit(event)}>
-                <h4>Create project</h4>
+                <h4>Add todo</h4>
                 <input
                     type="text"
                     className="form-control"
-                    name="name"
+                    name="text"
                     value={this.state.name}
                     onChange={(event) => this.handleChange(event)}
                 />
 
-                <select multiple
-                    name="users"
+                <select
+                    name="project"
                     className="form-control"
-                    onChange={(event) => this.handleUserChange(event)}
+                    onChange={(event) => this.handleChange(event)}
+                >
+                    {this.props.projects.map((project) =>
+                        <option value={project.id}>{project.name}</option>)}
+                </select>
+
+                <select
+                    name="created_by"
+                    className="form-control"
+                    onChange={(event) => this.handleChange(event)}
                 >
                     {this.props.users.map((user) =>
                         <option value={user.id}>{user.first_name} {user.last_name}</option>)}
@@ -60,4 +53,4 @@ class ProjectForm extends React.Component{
     }
 }
 
-export default ProjectForm
+export default TodoForm
