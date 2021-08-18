@@ -13,20 +13,23 @@ const ProjectItem = ({project, users, deleteProject}) => {
 
 const ProjectList = ({projects, users, deleteProject}) => {
     return(
-        <table id="table">
-            <th>Project name</th>
-            <th>Users in project</th>
-            <th></th>
-            <tbody>
-            {projects.map((project) =>
-                <ProjectItem
-                    project = {project}
-                    users = {find_users_of_project(project, users)}
-                    deleteProject = {deleteProject}
-                />)
-            }
-            </tbody>
-        </table>
+        <div>
+            <table id="table">
+                <th>Project name</th>
+                <th>Users in project</th>
+                <th></th>
+                <tbody>
+                {projects.map((project) =>
+                    <ProjectItem
+                        project = {project}
+                        users = {find_users_of_project(project, users)}
+                        deleteProject = {deleteProject}
+                    />)
+                }
+                </tbody>
+            </table>
+            <div class="create"><Link to="/projects/create">Create</Link></div>
+        </div>
     )
 }
 
