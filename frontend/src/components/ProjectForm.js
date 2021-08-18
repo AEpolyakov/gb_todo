@@ -22,9 +22,9 @@ class ProjectForm extends React.Component{
         let users = []
         for(let i=0; i < event.target.selectedOptions.length; i++) {
             const val = event.target.selectedOptions.item(i).value
-            console.log('handle value:', val)
             users.push(val)
         }
+        console.log('handle values:', users)
         this.setState({
             'users' : users
         })
