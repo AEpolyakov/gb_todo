@@ -180,7 +180,9 @@ class App extends React.Component {
                 </nav>
                 <Switch>
                     <Route exact path='/projects/create'>
-                        <ProjectForm createProject={(name, users) => this.createProject(name, users)} />
+                        <ProjectForm
+                            users={this.state.users}
+                            createProject={(name, users) => this.createProject(name, users)} />
                     </Route>
                     <Route exact path='/users/' component={() => <UserList users={this.state.users} />} />
                     <Route exact path='/projects/'>

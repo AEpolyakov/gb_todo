@@ -10,8 +10,26 @@ class ProjectForm extends React.Component{
         this.setState({
             [event.target.name]: event.target.value
         })
-        console.log([event.target.name]: event.target.value)
     }
+
+    handleUserChange(event) {
+        if (!event.target.selectedOptions) {
+            this.setState({
+                'users' : []
+            })
+            return;
+        }
+        let users = []
+        for(let i=0; i < event.target.selectedOptions.length; i++) {
+            const val = event.target.selectedOptions.item(i).value
+            console.log('handle value:', val)
+            users.push(val)
+        }
+        this.setState({
+            'users' : users
+        })
+    }
+
     handleSubmit(event){
         console.log(this.state.name)
         console.log(this.state.users)
@@ -23,28 +41,23 @@ class ProjectForm extends React.Component{
         return (
             <form onSubmit={(event) => this.handleSubmit(event)}>
                 <h4>Create project</h4>
-                <div className="form-group">
-                    <label for="login">name</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="name"
-                        value={this.state.name}
-                        onChange={(event) => this.handleChange(event)}
-                    />
-                </div>
+                <input
+                    type="text"
+                    className="form-control"
+                    name="name"
+                    value={this.state.name}
+                    onChange={(event) => this.handleChange(event)}
+                />
 
-                <div className="form-group">
-                    <label for="users">users</label>
-                    <input
-                        type="number"
-                        className="form-control"
-                        name="users"
-                        value={this.state.users}
-                        onChange={(event) => this.handleChange(event)}
-                    />
-                </div>
-                <input type="submit" className="btn-primary" value="Save" />
+                <select multiple
+                    name="users"
+                    className="form-control"
+                    onChange={(event) => this.handleUserChange(event)}
+                >
+                    {this.props.users.map((user) =>
+                        <option value={user.id}>{user.first_name} {user.last_name}</option>)}
+                </select>
+                <input type="submit" className="btn-primary" value="Create" />
             </form>
         )
     }
