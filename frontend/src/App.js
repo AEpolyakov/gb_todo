@@ -181,7 +181,8 @@ class App extends React.Component {
                     <Link to="/users/" class="active">Users</Link>
                     <Link to="/projects/">Projects</Link>
                     <Link to="/todos/">Todo</Link>
-                    <Link to="/projects/create">Create</Link>
+                    <Link to="/projects/create">Create Project</Link>
+                    <Link to="/todos/create">Create Todo</Link>
                     {this.is_auth() ?
                         <div>
                             <Link class="align-right" onClick={() => this.logout()}>logout</Link>

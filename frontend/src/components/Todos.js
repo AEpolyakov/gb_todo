@@ -31,7 +31,6 @@ const TodoList = ({todos, projects, users, deleteTodo}) => {
                     />)
                 }
             </table>
-            <div class="create"><Link to="/todos/create">Create</Link></div>
         </div>
     )
 }
