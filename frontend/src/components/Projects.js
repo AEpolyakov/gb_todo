@@ -1,30 +1,61 @@
 import React from 'react'
 import { useParams, Link } from 'react-router-dom'
 
-const ProjectItem = ({project}) => {
+const ProjectItem = ({project, users, deleteProject}) => {
     return(
         <tr>
             <td><Link to={`${project.id}`}>{project.name}</Link></td>
-            <td>{project.users.map((user) => `${user.first_name} ${user.last_name}; `)}</td>
+            <td>{users.map((user)=> <a>{user.first_name} {user.last_name}; </a>)}</td>
+            <td><button onClick={() => deleteProject(project.id)} type="button">del prj</button></td>
         </tr>
     )
 }
 
-const ProjectList = ({projects}) => {
+const ProjectList = ({projects, users, deleteProject, filterValue, refreshProjects}) => {
+    let filtered_projects = projects
+    if (filterValue){
+        filtered_projects = projects.filter(project => project.name.toLowerCase().includes(filterValue.toLowerCase()))
+    }
     return(
-        <table id="table">
-            <th>Project name</th>
-            <th>Users in project</th>
-            {projects.map((project)=> <ProjectItem project={project} />)}
-        </table>
+        <div>
+            <div>filter:<input name="filterValue" id="filterValue" onChange={() => {
+                    const fV = document.getElementById('filterValue').value
+                    refreshProjects(fV)
+                }}/>
+            </div>
+            <table id="table">
+                <th>Project name</th>
+                <th>Users in project</th>
+                <th></th>
+                <tbody>
+                {filtered_projects.map((project) =>
+                    <ProjectItem
+                        project = {project}
+                        users = {find_users_of_project(project, users)}
+                        deleteProject = {deleteProject}
+                    />)
+                }
+                </tbody>
+            </table>
+        </div>
     )
 }
 
+function find_users_of_project(project, users){
+    let result_users = []
+    project.users.map( (project_user_id) => {
+        const project_user = users.find((user) => user.id === project_user_id)
+        result_users.push({"first_name": project_user.first_name, "last_name": project_user.last_name})
+    } )
+    return result_users
+}
+
 const ProjectSingle = ({todos, projects, users}) => {
+    console.log('from prj single:', todos, projects, users)
     let {id} = useParams()
-    let filtered_projects = projects.filter((project) => project.id == parseInt(id))
-    let project = filtered_projects[0]
-    let current_project_todos = todos.filter((todo) => todo.project == project.id)
+    let project = projects.filter((project) => project.id === parseInt(id))[0]
+    let current_project_todos = todos.filter((todo) => todo.project === project.id)
+
     return(
         <div>
             <Link to='/projects/'>Back</Link>
@@ -32,12 +63,12 @@ const ProjectSingle = ({todos, projects, users}) => {
                 <h4>Project:  {project.name}</h4>
                 <p>participants:</p>
                 <ul>
-                    {project.users.map((user) => <li>{user.first_name}  {user.last_name}</li>)}
+                    {find_users_of_project(project, users).map((user) => <li key={user.id}>{user.first_name} {user.last_name}</li>)}
                 </ul>
                 <hr />
                 <p>todo list:</p>
                 <ul>
-                    {current_project_todos.map((todo) => <li>{todo.text}</li>)}
+                    {current_project_todos.map((todo) => <li key={todo.text.substring(0, 5)}>{todo.text}</li>)}
                 </ul>
             </div>
         </div>

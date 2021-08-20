@@ -1,5 +1,4 @@
 from rest_framework.serializers import ModelSerializer, HyperlinkedModelSerializer
-from rest_framework import serializers as s
 from .models import Project, ToDo
 from users.models import User
 from users.serializers import UserSerializer
@@ -12,7 +11,7 @@ class UserMiniSerializer(ModelSerializer):
 
 
 class ProjectSerializer(ModelSerializer):
-    # users = UserMiniSerializer(many=True)
+    # users = UserSerializer(many=True)
 
     class Meta:
         model = Project
