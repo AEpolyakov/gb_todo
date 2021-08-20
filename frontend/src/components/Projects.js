@@ -11,15 +11,24 @@ const ProjectItem = ({project, users, deleteProject}) => {
     )
 }
 
-const ProjectList = ({projects, users, deleteProject}) => {
+const ProjectList = ({projects, users, deleteProject, filterValue, refreshProjects}) => {
+    let filtered_projects = projects
+    if (filterValue){
+        filtered_projects = projects.filter(project => project.name.toLowerCase().includes(filterValue.toLowerCase()))
+    }
     return(
         <div>
+            <div>filter:<input name="filterValue" id="filterValue" onChange={() => {
+                    const fV = document.getElementById('filterValue').value
+                    refreshProjects(fV)
+                }}/>
+            </div>
             <table id="table">
                 <th>Project name</th>
                 <th>Users in project</th>
                 <th></th>
                 <tbody>
-                {projects.map((project) =>
+                {filtered_projects.map((project) =>
                     <ProjectItem
                         project = {project}
                         users = {find_users_of_project(project, users)}
@@ -28,7 +37,6 @@ const ProjectList = ({projects, users, deleteProject}) => {
                 }
                 </tbody>
             </table>
-            <div class="create"><Link to="/projects/create">Create</Link></div>
         </div>
     )
 }

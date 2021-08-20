@@ -30,7 +30,8 @@ class App extends React.Component {
             'project': [],
             'todos': [],
             'token': '',
-            'login': ''
+            'login': '',
+            'projectFilter': '',
         }
         this.get_token_from_storage()
     }
@@ -168,6 +169,10 @@ class App extends React.Component {
             }).catch(error => console.log(error))
     }
 
+    refreshProjects(filterValue){
+        this.setState({'projectFilter': filterValue})
+    }
+
     render(){
         return (
         <div class="content">
@@ -176,6 +181,7 @@ class App extends React.Component {
                     <Link to="/users/" class="active">Users</Link>
                     <Link to="/projects/">Projects</Link>
                     <Link to="/todos/">Todo</Link>
+                    <Link to="/projects/create">Create</Link>
                     {this.is_auth() ?
                         <div>
                             <Link class="align-right" onClick={() => this.logout()}>logout</Link>
@@ -202,6 +208,8 @@ class App extends React.Component {
                             projects={this.state.projects}
                             users={this.state.users}
                             deleteProject={(id) => this.deleteProject(id)}
+                            filterValue = {this.state.projectFilter}
+                            refreshProjects={(filterValue) => this.refreshProjects(filterValue)}
                         />
                     </Route>
                     <Route exact path='/todos/'>
